@@ -1,6 +1,8 @@
 import random as rand
 import numpy as np
-from flask import flask, render_template
+import json
+
+from flask import Flask, render_template
 
 class maze:
     def __init__(self, w: int, h: int):
@@ -9,7 +11,7 @@ class maze:
         self.h = h
 
         for y in range(h):
-            row = []
+            row = [] 
             for x in range(w):
                 row.append({
                     "x":x,
@@ -21,9 +23,9 @@ class maze:
     def is_valid(self, x: int, y: int) -> bool:
         if x < 0 or x > self.w-1:
             return False
-        if y < 0 or y > self.y-1:
+        if y < 0 or y > self.h-1:
             return False
-        if maze[y][x]["visited"]:
+        if self.maze[y][x]["visited"]:
             return False
         return True
     
@@ -65,5 +67,15 @@ class maze:
 
         return self.maze
                 
-maze = maze()
+m = maze(10,10)
 
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    maze_data = m.dfs([0,0])
+    maze_json = json.dumps(maze_data)
+    return render_template("index.html", maze_json=maze_json)
+
+if __name__ == "__main__":
+    app.run(debug = True)
