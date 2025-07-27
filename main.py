@@ -18,5 +18,6 @@ class maze:
     def dfs(self, start_pos:list[int], end_pos:list[int]) -> list[list[dict]]:
         solved = False
         stack = []
+        stack.append(F)
         while not solved:
             
