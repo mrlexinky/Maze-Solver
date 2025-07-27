@@ -2,9 +2,9 @@ import random
 import numpy
 
 class maze:
-    def __init__(self):
-        self.maze = []
-    def generate_maze(self, w: int, h: int) -> list[list[dict]]:
+    def __init__(self, w: int, h: int):
+        self.w = w
+        self.h = hash
         for y in range(h):
             row = []
             for x in range(w):
@@ -14,10 +14,16 @@ class maze:
                     "visited": False,
                     "walls": {"N": True, "E": True, "S": True, "W": True}})
             self.maze.append(row)
-        return self.maze
-    def dfs(self, start_pos:list[int], end_pos:list[int]) -> list[list[dict]]:
+    def is_valid(self, x: int, y: int) -> bool:
+        if x < 0 or x > self.w-1:
+            return False
+        if y < 0 or y > self.y-1:
+            return False
+        if maze[x][y]{"visited"}:
+            return False
+    def dfs(self, start_pos:list[int]) -> list[list[dict]]:
         solved = False
         stack = []
-        stack.append(F)
+        stack.append(start_pos[0])
         while not solved:
             
