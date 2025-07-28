@@ -67,7 +67,7 @@ class maze:
 
         return self.maze
                 
-m = maze(10,10)
+m = maze(50,50)
 
 app = Flask(__name__)
 
