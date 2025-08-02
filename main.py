@@ -47,10 +47,12 @@ class maze:
             
     def dfs(self, start_pos: list[int]) -> list[list[dict]]:
         stack = [start_pos]
+        steps = []
 
         while stack:
             x, y = stack[-1]
             self.maze[y][x]["visited"] = True
+            steps.append({"x":x, "y":y})
 
             neighbors = []
             for dx, dy in [ (0, -1), (1, 0), (0, 1), (-1, 0) ]:
@@ -65,17 +67,19 @@ class maze:
             else:
                 stack.pop()
 
-        return self.maze
-                
-m = maze(50,50)
+        return {"maze": self.maze, "steps": steps}
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    maze_data = m.dfs([0,0])
-    maze_json = json.dumps(maze_data)
-    return render_template("index.html", maze_json=maze_json)
+    return render_template("index.html")
+
+@app.route("/maze.json")
+def maze_json():
+    m = maze(50, 50)
+    maze_data = m.dfs([0, 0])
+    return json.dumps(maze_data)
 
 if __name__ == "__main__":
     app.run(debug = True)

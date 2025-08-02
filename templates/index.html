@@ -3,20 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maze</title>
+  <title>Maze Visualizer</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex flex-col items-center p-8">
-  <h1 class="text-4xl font-bold text-blue-600 mb-8">Maze Visualization</h1>
+<body class="min-h-screen bg-gradient-to-br from-purple-100 via-white to-purple-200 flex flex-col items-center justify-center p-8 space-y-8">
 
-  <div id="maze-container" class="inline-block border border-black"></div>
+  <h1 class="text-5xl text-blue-700 drop-shadow-md ">Maze Visualizer</h1>
 
-  <!-- Embedded maze JSON -->
-  <script id="maze-data" type="application/json">
-    {{ maze_json | safe }}
-  </script>
+  <div class="rounded-lg shadow-lg border-4 border-blue-400">
+    <canvas id="maze-canvas" width="500" height="500" class="rounded"></canvas>
+  </div>
 
-  <!-- Link your static JS file correctly -->
+  <div class="flex space-x-4">
+    <button id="generate-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-md transition duration-200">
+      Generate Maze
+    </button>
+    <button id="solve-btn" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-xl shadow-md transition duration-200">
+      Solve Maze
+    </button>
+  </div>
+
   <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

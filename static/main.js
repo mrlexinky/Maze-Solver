@@ -1,30 +1,78 @@
-const rawData = document.getElementById("maze-data").textContent;
-const mazeData = JSON.parse(rawData);
+function generateMaze(){
+  fetch("/maze.json")
+    .then(response => response.json()) // Convert the response to JSON
+    .then(mazeData => {
+      const canvas = document.getElementById("maze-canvas");
+      const ctx = canvas.getContext("2d");
 
-const container = document.getElementById("maze-container");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-const height = mazeData.length;
-const width = mazeData[0].length;
+      const rows = mazeData.maze.length;
+      const cols = mazeData[0].length;
 
-container.style.display = 'grid';
-container.style.gridTemplateColumns = `repeat(${width}, 40px)`;
-container.style.gridTemplateRows = `repeat(${height}, 40px)`;
+      const cellSize = Math.min(
+        canvas.width / cols,
+        canvas.height / rows
+      );
 
-for (let y = 0; y < height; y++) {
-  for (let x = 0; x < width; x++) {
-    const cell = mazeData[y][x];
-    const walls = cell.walls;
 
-    const cellDiv = document.createElement('div');
-    cellDiv.classList.add('w-10', 'h-10');
+      // Set line style for drawing walls
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "black";
 
-    if (walls.N) cellDiv.classList.add('border-t', 'border-black', 'color');
-    if (walls.E) cellDiv.classList.add('border-r', 'border-black');
-    if (walls.S) cellDiv.classList.add('border-b', 'border-black');
-    if (walls.W) cellDiv.classList.add('border-l', 'border-black');
+      // Loop through each cell in the maze
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const cell = mazeData[y][x];
 
-    cellDiv.classList.add(cell.visited ? 'bg-blue-200' : 'bg-white');
+          // Calculate the top-left corner of this cell
+          const px = x * cellSize;
+          const py = y * cellSize;
 
-    container.appendChild(cellDiv);
-  }
+          // Draw each wall if it exists
+          if (cell.walls.N) {
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(px + cellSize, py);
+            ctx.stroke();
+          }
+
+          if (cell.walls.E) {
+            ctx.beginPath();
+            ctx.moveTo(px + cellSize, py);
+            ctx.lineTo(px + cellSize, py + cellSize);
+            ctx.stroke();
+          }
+
+          if (cell.walls.S) {
+            ctx.beginPath();
+            ctx.moveTo(px, py + cellSize);
+            ctx.lineTo(px + cellSize, py + cellSize);
+            ctx.stroke();
+          }
+
+          if (cell.walls.W) {
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(px, py + cellSize);
+            ctx.stroke();
+          }
+        }
+      }
+    })
 }
+
+const generateButton = document.getElementById("generate-btn")
+
+generateButton.addEventListener("click", generateMaze)
+
+  // Fill in visited cells with light blue (optional)
+  if (cell.visited) {
+    ctx.fillStyle = "#bfdbfe"; // light blue
+    ctx.fillRect(
+      px + 1,
+      py + 1,
+      cellSize - 2,
+      cellSize - 2
+    );
+  }
